@@ -1,0 +1,162 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct topluluk
+{
+	int bilgi;
+	char mesaj[100];
+	struct topluluk *on;
+	struct topluluk *arka;
+}bliste2;
+
+bliste2 *ilk2= NULL, *son2=NULL;
+
+int basaEkle (bliste *ki)
+{
+	if(ilk != NULL)
+	{
+		ilk2->on = ki;
+		ki->arka = ilk2;
+		ilk2 = ki;
+		ilk2->on = NULL;
+	}
+	else
+	{
+		ilk2 = ki;
+		son2 = ki;
+		ilk2->on = NULL;
+		ilk2->arka = NULL;
+	}
+	return 0;
+}
+
+int ekle(bliste2 *ki)
+{
+	if (ilk !=NULL) /* kayit var ise */
+	{
+		son2->arka = ki;
+		ki->on = son2;
+		son2 = ki;
+		son2->arka = NULL;
+	}
+	else
+	{
+		ilk2 = ki;
+		son2 = ki;
+		ilk2->arka = NULL;
+		ilk2->on = NULL;
+	}
+	return 0;
+}
+
+int listele()
+{
+	bliste2 *p;
+	p = ilk2;
+	if (p == NULL)
+		return -1; /* boþ liste */
+	while(p)
+	{
+		yazEkrana(p);
+		p = p->arka;
+	}
+	return 0;
+}
+
+void yazEkrana(bliste2 *p)
+{
+	printf("bilgi = %i\nmesaj = %s\n", p->bilgi, p->mesaj);
+	
+	
+}
+
+int terslistele()
+{
+	bliste *p;
+	p = son2;
+	if (p == NULL)
+		return -1;
+	while(p)
+	{
+		yazEkrana(p);
+		p = p->on;
+	}
+	return 0;
+}
+
+bliste2 *arama(int aranan)
+{
+	bliste *p;
+	p = ilk2;
+	while (p)
+	{
+		if (aranan == p->bilgi)
+			return p;  //arama bulundu
+		p = p->arka;  //sonraki düðüm
+	}
+	return NULL;
+}
+
+bliste *silme(int silinen)
+{
+	bliste *p;
+	p = arama(silinen);
+	if (p == NULL)
+		return NULL;
+	if (ilk2 == p)
+	{ /* ilk düðüm mü ? */
+		if (ilk2->arka != NULL)
+		{
+			/*listede birden fazla düðüm var */
+			ilk2 = p->arka;
+			ilk2->on = NULL;
+		}
+		else
+		{
+			/*listede bir düðüm var */
+			ilk2 = NULL;
+			son2 = NULL;
+		}
+		
+	}
+	else
+	{
+		p->on->arka = p->arka;
+		if (p == son2) /* silinen son düðüm ise */
+			son2 = son2->on;
+		else
+			p->arka->on = p->on;
+	}
+	free(p);
+	return p;	
+}
+
+void bastanSil()
+{
+	if (ilk2 != NULL)
+	{
+		bliste2 *sil;
+		sil = ilk2;
+		ilk2 = ilk2->arka;
+		ilk2->on = NULL;
+		printf("\n%d listeden cikti\n\n",sil->bilgi);
+		free(sil);
+	}
+	else
+		printf("\nListe Zaten Bos !\n\n");
+}
+
+void sondanSil()
+{
+	if (ilk2 != NULL)
+	{
+		bliste2 *sil;
+		sil = son2;
+		son2 = son2->on;
+		son2->arka = son2;
+		printf("\n%d listeden cikti\n\n",sil->bilgi);
+		free(sil);
+	}
+	else
+		printf("\nListe Bos\n\n");
+}
